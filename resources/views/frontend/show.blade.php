@@ -282,11 +282,8 @@
             };
             const DEFAULT_STEP_ICON = '<svg class="' + ICON_CLS + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l3 4v12a1 1 0 01-1 1H7a1 1 0 01-1-1V7l3-4z"/><path d="M9 11h6M9 15h6"/></svg>';
 
-            // Shared checkmark glyph used inside both single-choice buttons and multi-select chips.
             const CHECK_PATH = 'M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 111.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z';
-
-            // Classes swapped in/out by JS to show a choice-btn as "selected" —
-            // there's no .active rule in CSS, Tailwind utilities only.
+            
             const CHOICE_BASE = ['choice-btn', 'inline-flex', 'items-center', 'gap-1.5', 'px-4', 'py-2.5', 'rounded-xl', 'border-2', 'text-sm', 'font-semibold', 'transition-all', 'duration-200'];
             const ACTIVE_CLASSES = ['border-transparent', 'bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'shadow-md'];
             const INACTIVE_CLASSES = ['border-gray-200', 'bg-white', 'text-gray-700', 'hover:border-gray-300'];
