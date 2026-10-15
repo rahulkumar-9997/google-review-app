@@ -8,6 +8,8 @@ use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\CacheController;
 use App\Http\Controllers\Backend\GoogleReviewController;
 use App\Http\Controllers\Frontend\PublicReviewController;
+use App\Http\Controllers\Backend\ReviewQuestionController;
+use App\Http\Controllers\Backend\ReviewQuestionOptionController;
 
 Route::get('/', [AuthController::class, 'showLoginForm']);
 Route::prefix('admin')->group(function () {
@@ -32,8 +34,19 @@ Route::group(['middleware' => ['auth:web']], function() {
     Route::get('clear-cache', [CacheController::class, 'clearCache'])->name('clear-cache');
     Route::resource('profile', ProfileController::class);
     Route::resource('manage-google-reviews', GoogleReviewController::class)->except(['show']);
+
     Route::get('manage-google-reviews/{manage_google_review}/qrcode', [GoogleReviewController::class, 'qrcode'])
-    ->name('manage-google-reviews.qrcode');
+        ->name('manage-google-reviews.qrcode');
+
+    Route::resource('manage-google-reviews.questions', ReviewQuestionController::class)
+        ->parameters(['manage-google-reviews' => 'shop', 'questions' => 'question']);
+
+    Route::resource('manage-google-reviews.questions.options', ReviewQuestionOptionController::class)
+        ->parameters([
+            'manage-google-reviews' => 'shop',
+            'questions' => 'question',
+            'options' => 'option',
+        ]);
 
 });
 

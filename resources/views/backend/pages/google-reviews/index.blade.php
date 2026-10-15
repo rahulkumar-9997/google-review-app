@@ -1,6 +1,19 @@
 @extends('backend.layouts.master')
 @section('title','Google Review Shops')
 @push('styles')
+<style>
+    /* Fix: allow dropdown to escape the table's scroll container */
+    .table-responsive {
+        overflow: visible !important;
+    }
+    .table-responsive table {
+        min-width: 100%;
+    }
+    /* Prevent dropdown from being clipped by table cells */
+    .table td .dropdown-menu {
+        z-index: 1055;
+    }
+</style>
 @endpush
 @section('main-content')
 <div class="page-content">

@@ -86,6 +86,12 @@
 
             <div class="p-5 md:p-7">
 
+                @if ($steps->isEmpty())
+                    <div class="text-center py-10">
+                        <p class="text-gray-500 text-sm mb-0">This review form isn't set up yet — please check back soon.</p>
+                    </div>
+                @else
+
                 {{-- Question flow, rendered by JS from the STEPS config below --}}
                 <div id="questionWrapper">
                     <div class="flex justify-between items-center mb-5">
@@ -156,6 +162,8 @@
                     </div>
                 </div>
 
+                @endif
+
             </div>
         </div>
         <p class="text-center text-gray-400 text-xs mt-4 flex items-center justify-center gap-1">
@@ -165,111 +173,13 @@
             Your review is written by you and posted under your own Google account.
         </p>
     </div>
+    @if ($steps->isNotEmpty())
     <script>
         (function() {
             const googleUrl = @json($shop->google_review_url);
             const draftUrl = @json(route('review.draft', $shop->slug));
             const csrf = @json(csrf_token());
-            const STEPS = [{
-                    id: 'purchase_for',
-                    type: 'multi',
-                    min: 1,
-                    question: 'What was this purchase for?',
-                    options: [
-                        'Everyday use for my family',
-                        'Setting up a new home or kitchen',
-                        'Wedding or festive shopping',
-                        'A gift for someone',
-                        'Replacing an old or worn-out appliance',
-                        'Bulk purchase for a business or restaurant',
-                    ],
-                },
-                {
-                    id: 'items',
-                    type: 'multi',
-                    min: 1,
-                    question: 'What did you buy?',
-                    hint: '(select one or more)',
-                    options: [
-                        'Pressure Cooker',
-                        'Cookware — Kadhai, Tava, Pans, Cook-and-Serve',
-                        'Chimney',
-                        'LPG Gas Stove',
-                        'Induction / Electric Cooktop',
-                        'Mixer Grinder, Juicer or Blender',
-                        'Electric Kettle',
-                        'Air Fryer',
-                        'Oven Toaster Griller (OTG)',
-                        'Toaster or Sandwich Maker',
-                        'Bottles & Flasks',
-                        'Lunchbox & Tiffin',
-                        'Serving & Dinner Set',
-                        'Cups & Mugs',
-                        'Jars & Containers',
-                        'Cutlery, Forks & Spoons',
-                        'Accessories & Spare Parts',
-                        'Not sure / multiple items',
-                    ],
-                },
-                {
-                    id: 'brands',
-                    type: 'multi',
-                    min: 1,
-                    question: 'Which brand(s) did you buy?',
-                    hint: '(select all that apply)',
-                    options: [
-                        'Hawkins', 'Prestige', 'Milton', 'Bergner', 'Borosil', 'Stahl',
-                        'Sunflame', 'Hindware', 'Philips', 'Sujata', 'Panasonic', 'Cello',
-                        'Other / not sure',
-                    ],
-                },
-                {
-                    id: 'instore_experience',
-                    type: 'multi',
-                    min: 0,
-                    question: 'How was your in-store experience?',
-                    options: [
-                        'Staff were knowledgeable and patient',
-                        'Found what I needed quickly',
-                        'Great variety under one roof',
-                        'Staff explained features/usage clearly',
-                        'Got a demo or help setting it up on the spot',
-                    ],
-                },
-                {
-                    id: 'why_choose',
-                    type: 'multi',
-                    min: 0,
-                    max: 2,
-                    question: 'What made you choose GD Sons?',
-                    hint: '(select up to 2)',
-                    options: [
-                        'Trusted name in Varanasi for 55+ years',
-                        'Genuine, authentic branded products',
-                        'Competitive pricing',
-                        'Recommended by friends or family',
-                        'Wide range under one roof',
-                        'Found them easily online',
-                    ],
-                },
-                {
-                    id: 'recommend',
-                    type: 'multi',
-                    min: 1,
-                    question: 'How likely are you to recommend GD Sons to friends or family?',
-                    options: ['Definitely will', 'Very likely', 'Somewhat likely', 'Not sure yet'],
-                },
-                {
-                    id: 'extra',
-                    type: 'text',
-                    min: 0,
-                    question: "Anything specific you'd like to add, in your own words?",
-                    hint: '(optional)',
-                    placeholder: "a staff member's name, a product detail, or how it solved a problem.",
-                },
-            ];
-
-            // A small SVG icon shown next to each question's headline — purely decorative.
+            const STEPS = @json($steps);
             const ICON_CLS = 'w-5 h-5 text-blue-600';
             const STEP_ICONS = {
                 purchase_for: '<svg class="' + ICON_CLS + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
@@ -283,7 +193,7 @@
             const DEFAULT_STEP_ICON = '<svg class="' + ICON_CLS + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l3 4v12a1 1 0 01-1 1H7a1 1 0 01-1-1V7l3-4z"/><path d="M9 11h6M9 15h6"/></svg>';
 
             const CHECK_PATH = 'M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 111.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z';
-            
+
             const CHOICE_BASE = ['choice-btn', 'inline-flex', 'items-center', 'gap-1.5', 'px-4', 'py-2.5', 'rounded-xl', 'border-2', 'text-sm', 'font-semibold', 'transition-all', 'duration-200'];
             const ACTIVE_CLASSES = ['border-transparent', 'bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'shadow-md'];
             const INACTIVE_CLASSES = ['border-gray-200', 'bg-white', 'text-gray-700', 'hover:border-gray-300'];
@@ -304,7 +214,11 @@
             const nextBtn = document.getElementById('nextBtn');
 
             function isStepValid(step) {
-                if (step.type === 'text') return true;
+                if (step.type === 'text') {
+                    if (!(step.min > 0)) return true;
+                    const val = answers[step.id];
+                    return !!(val && String(val).trim().length);
+                }
                 if (step.type === 'single') return (step.min || 0) === 0 || !!answers[step.id];
                 const val = answers[step.id] || [];
                 return val.length >= (step.min || 0);
@@ -385,7 +299,7 @@
                             bounce(btn);
                         });
                     });
-                } else if (step.type === 'multi') {
+                } else if (step.type === 'multiple') {
                     const checkboxes = questionArea.querySelectorAll('input[type=checkbox]');
                     checkboxes.forEach(function(cb) {
                         cb.addEventListener('change', function() {
@@ -432,11 +346,11 @@
                     html += '<div class="flex justify-end mb-2">' +
                         '<button type="button" id="micBtn" class="text-gray-500 hover:text-gray-700 p-2 rounded-xl hover:bg-gray-100 transition" title="Speak instead of typing">🎤</button></div>' +
                         '<textarea id="textInput" class="w-full border-2 border-gray-200 rounded-2xl p-4 text-sm leading-relaxed focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition" rows="2" placeholder="' +
-                        esc(step.placeholder) + '">' + esc(existing) + '</textarea>';
+                        esc(step.placeholder || '') + '">' + esc(existing) + '</textarea>';
                 } else {
-                    const picked = answers[step.id] || (step.type === 'multi' ? [] : null);
-                    html += '<div class="flex flex-wrap' + (step.type === 'multi' ? ' -m-1' : ' gap-2') + '">';
-                    step.options.forEach(function(opt) {
+                    const picked = answers[step.id] || (step.type === 'multiple' ? [] : null);
+                    html += '<div class="flex flex-wrap' + (step.type === 'multiple' ? ' -m-1' : ' gap-2') + '">';
+                    (step.options || []).forEach(function(opt) {
                         if (step.type === 'single') {
                             const isActive = picked === opt;
                             const cls = CHOICE_BASE.concat(isActive ? ACTIVE_CLASSES : INACTIVE_CLASSES).join(' ');
@@ -563,6 +477,7 @@
             renderStep(current);
         })();
     </script>
+    @endif
 </body>
 
 </html>

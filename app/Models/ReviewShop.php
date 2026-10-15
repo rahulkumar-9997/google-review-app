@@ -24,4 +24,9 @@ class ReviewShop extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function questions()
+    {
+        return $this->hasMany(ReviewQuestion::class)->orderBy('sort_order');
+    }
 }
